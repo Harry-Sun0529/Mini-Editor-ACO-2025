@@ -13,7 +13,7 @@ class SelectionImplTest {
         assertEquals(0, sel.getBufferBeginIndex());
         assertEquals(3, sel.getBufferEndIndex());
 
-        // 当 buffer 变长时，bufferEndIndex 也应该跟着变
+        // When the buffer becomes longer, bufferEndIndex should also change
         buffer.append("de");
         assertEquals(0, sel.getBufferBeginIndex());
         assertEquals(5, sel.getBufferEndIndex());
@@ -25,10 +25,10 @@ class SelectionImplTest {
         SelectionImpl sel = new SelectionImpl(buffer);
 
         sel.setEndIndex(2);   // [0,2)
-        sel.setBeginIndex(4); // begin > end，应自动把 end 拉到 4
+        sel.setBeginIndex(4); // begin > end，should automatically pull end to 4
 
         assertEquals(4, sel.getBeginIndex());
-        assertEquals(4, sel.getEndIndex()); // 空选区，光标在 4
+        assertEquals(4, sel.getEndIndex()); // Empty selection, cursor at 4
     }
 
     @Test
@@ -37,7 +37,7 @@ class SelectionImplTest {
         SelectionImpl sel = new SelectionImpl(buffer);
 
         sel.setBeginIndex(4);
-        sel.setEndIndex(2); // end < begin，应把 begin 拉回 2
+        sel.setEndIndex(2); // end < begin，begin should be pulled back to 2
 
         assertEquals(2, sel.getBeginIndex());
         assertEquals(2, sel.getEndIndex());
@@ -48,13 +48,13 @@ class SelectionImplTest {
         StringBuilder buffer = new StringBuilder("abc");
         SelectionImpl sel = new SelectionImpl(buffer);
 
-        // 小于 0
+        // Less than 0
         assertThrows(IndexOutOfBoundsException.class,
                 () -> sel.setBeginIndex(-1));
 
-        // 大于 buffer.length()
+        // Greater than buffer.length()
         assertThrows(IndexOutOfBoundsException.class,
-                () -> sel.setEndIndex(4)); // buffer 长度是 3
+                () -> sel.setEndIndex(4)); // Buffer length is 3
     }
 
     @Test

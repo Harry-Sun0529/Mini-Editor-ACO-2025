@@ -21,8 +21,8 @@ class EngineImplTest {
     void setUp() {
         engine = new EngineImpl();
         editor = new Editor();
-        Recorder recorder = new RecorderImpl();  // V2 新增
-        ui = new UserInterfaceImpl(editor, engine, recorder); // 使用新构造器
+        Recorder recorder = new RecorderImpl();  // V2 newly added
+        ui = new UserInterfaceImpl(editor, engine, recorder); // Use new constructor
     }
 
     @Test
@@ -42,9 +42,9 @@ class EngineImplTest {
     @Test
     void copy_and_paste_command_should_work() {
         ui.onInsert("12345");
-        ui.onSelectionChange(1, 4); // select "234"
+        ui.onSelectionChange(1, 4); // Select "234"
         ui.onCopy();
-        ui.onSelectionChange(5, 5); // move cursor to end
+        ui.onSelectionChange(5, 5); // Move cursor to end
         ui.onPaste();
         assertEquals("12345234", engine.getBufferContents());
     }
@@ -62,9 +62,9 @@ class EngineImplTest {
     void paste_should_replace_selection() {
         ui.onInsert("abcdef");
         ui.onSelectionChange(1, 4);
-        ui.onCopy(); // clipboard = "bcd"
-        ui.onSelectionChange(2, 5); // select "cde"
-        ui.onPaste(); // replace with "bcd"
+        ui.onCopy(); // Clipboard = "bcd"
+        ui.onSelectionChange(2, 5); // Select "cde"
+        ui.onPaste(); // Replace with "bcd"
         assertEquals("abbcdf", engine.getBufferContents());
     }
 
@@ -72,16 +72,16 @@ class EngineImplTest {
     void sequence_of_commands_should_work_together() {
         ui.onInsert("12345");
         ui.onSelectionChange(0, 2);
-        ui.onCut(); // cut "12"
+        ui.onCut(); // Cut "12"
         ui.onSelectionChange(3, 3);
-        ui.onPaste(); // paste "12" after "345"
+        ui.onPaste(); // Paste "12" after "345"
         assertEquals("34512", engine.getBufferContents());
     }
 
     @Test
     void delete_with_empty_selection_should_do_nothing() {
         ui.onInsert("abc");
-        // 默认选区是 [0,0) —— 空选区
+        // The default selection is [0,0) - empty selection
         ui.onDelete();
         assertEquals("abc", engine.getBufferContents());
     }
@@ -92,8 +92,8 @@ class EngineImplTest {
         ui.onSelectionChange(0, 3);
         ui.onCopy(); // clipboard = "abc"
 
-        ui.onSelectionChange(1, 1); // 空选区
-        ui.onCopy(); // 现在应该变成空字符串
+        ui.onSelectionChange(1, 1); // Empty constituency
+        ui.onCopy(); // Should now become an empty string
         assertEquals("", engine.getClipboardContents());
     }
 
@@ -103,8 +103,8 @@ class EngineImplTest {
         ui.onSelectionChange(0, 3);
         ui.onCopy(); // clipboard = "abc"
 
-        ui.onSelectionChange(3, 3); // 光标在末尾
-        ui.onPaste();  // 变成 "abcabc"
+        ui.onSelectionChange(3, 3); // Cursor at end
+        ui.onPaste();  // becomes "abcabc"
         assertEquals("abcabc", engine.getBufferContents());
     }
 }

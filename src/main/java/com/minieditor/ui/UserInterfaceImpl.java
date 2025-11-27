@@ -74,6 +74,6 @@ public class UserInterfaceImpl implements UserInterface {
     public void onReplay() {
         Command replay = new Replay(recorder);
         editor.executeCommand(replay);
-        // 注意：replay 本身不应被 save，否则会无限增长
+        // replay itself should not be saved, otherwise it will grow infinitely
     }
 }

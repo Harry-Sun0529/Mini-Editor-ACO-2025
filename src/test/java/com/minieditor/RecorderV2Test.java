@@ -34,7 +34,7 @@ class RecorderV2Test {
         assertEquals("abc", engine.getBufferContents());
 
         ui.onReplay();
-        assertEquals("abcabc", engine.getBufferContents()); // 插入被回放一次
+        assertEquals("abcabc", engine.getBufferContents()); // Inserts are played back once
     }
 
     @Test
@@ -43,25 +43,25 @@ class RecorderV2Test {
         ui.onInsert("a");
         ui.onStopRecording();
 
-        ui.onInsert("b"); // 这条不应被录到
+        ui.onInsert("b"); // This should not be recorded
 
         ui.onReplay();
-        assertEquals("aba", engine.getBufferContents()); // 只回放 "a"
+        assertEquals("aba", engine.getBufferContents()); // Playback only "a"
     }
 
     @Test
     void replay_should_reproduce_selection_and_cut_paste_sequence() {
         ui.onStartRecording();
         ui.onInsert("12345");
-        ui.onSelectionChange(0, 2); // select "12"
-        ui.onCut();                  // cut -> buffer "345", clipboard "12"
-        ui.onSelectionChange(3, 3); // cursor at end
-        ui.onPaste();                // buffer "34512"
+        ui.onSelectionChange(0, 2); // Select "12"
+        ui.onCut();                  // Cut -> buffer "345", clipboard "12"
+        ui.onSelectionChange(3, 3); // Cursor at end
+        ui.onPaste();                // Buffer "34512"
         ui.onStopRecording();
 
         assertEquals("34512", engine.getBufferContents());
 
-        ui.onReplay(); // 再执行一遍同样序列
+        ui.onReplay(); // Execute the same sequence again
         assertEquals("5123412345", engine.getBufferContents());
     }
 }

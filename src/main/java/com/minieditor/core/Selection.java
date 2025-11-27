@@ -1,10 +1,10 @@
 package com.minieditor.core;
 
 public interface Selection {
-    int getBeginIndex();                      // 选区起始（含）
-    int getEndIndex();                        // 选区结束（不含）
-    int getBufferBeginIndex();                // buffer 起点（通常 0）
-    int getBufferEndIndex();                  // buffer 终点（= 当前文本长度）
-    void setBeginIndex(int beginIndex);       // 设置起点（需在范围内）
-    void setEndIndex(int endIndex);           // 设置终点（需在范围内）
+    int getBeginIndex();                      // Starting point of the selection (include start)
+    int getEndIndex();                        // End of selection (exclusive end)
+    int getBufferBeginIndex();                // Buffer starting point (usually 0)
+    int getBufferEndIndex();                  // buffer end point (= current text length)
+    void setBeginIndex(int beginIndex);       // Set starting point (needs to be within range)
+    void setEndIndex(int endIndex);           // Set the end point (needs to be within the range)
 }

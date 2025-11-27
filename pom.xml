@@ -16,7 +16,7 @@
     </properties>
 
     <repositories>
-        <!-- ✅ 保证能访问中央仓库 -->
+        <!-- Guaranteed access to central warehouse -->
         <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
@@ -24,7 +24,7 @@
     </repositories>
 
     <dependencies>
-        <!-- ✅ JUnit Jupiter API -->
+        <!-- JUnit Jupiter API -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -32,7 +32,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ✅ JUnit Jupiter Engine -->
+        <!-- JUnit Jupiter Engine -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -44,7 +44,7 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- ✅ Maven Surefire 插件：让 JUnit5 测试能运行 -->
+                <!-- Maven Surefire plugin: enabling JUnit5 tests to run -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>

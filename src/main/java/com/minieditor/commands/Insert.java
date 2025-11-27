@@ -7,7 +7,7 @@ import com.minieditor.core.Engine;
 
 public class Insert implements Command, CommandOriginator {
     private final Engine engine;
-    private String text; // 不能 final，因为 replay 时需要 setMemento
+    private String text; // can not use final，because replay need to use setMemento
 
     public Insert(Engine engine, String text) {
         this.engine = engine;

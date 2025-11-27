@@ -1,7 +1,7 @@
 package com.minieditor.core;
 
 class SelectionImpl implements Selection {
-    private final StringBuilder buffer;   // 引用 Engine 的底层 buffer
+    private final StringBuilder buffer;   // Reference the underlying buffer of the Engine
     private int beginIndex = 0;
     private int endIndex = 0;
 
@@ -18,7 +18,7 @@ class SelectionImpl implements Selection {
     public void setBeginIndex(int beginIndex) {
         rangeCheck(beginIndex);
         if (beginIndex > endIndex) {
-            // 允许设置，但保持区间合法：这里简单地把 end 跟着走
+            // Allow settings, but keep the range legal: here simply follow end
             endIndex = beginIndex;
         }
         this.beginIndex = beginIndex;
@@ -28,7 +28,7 @@ class SelectionImpl implements Selection {
     public void setEndIndex(int endIndex) {
         rangeCheck(endIndex);
         if (endIndex < beginIndex) {
-            // 允许设置，但保持区间合法
+            // Allow setting, but keep range legal
             beginIndex = endIndex;
         }
         this.endIndex = endIndex;
@@ -41,7 +41,7 @@ class SelectionImpl implements Selection {
         }
     }
 
-    // 工具方法：把选区重置为某个光标位置（空选区）
+    // Resets the selection to a certain cursor position (empty selection)
     void collapseTo(int pos) {
         setBeginIndex(pos);
         setEndIndex(pos);
