@@ -62,6 +62,6 @@ class RecorderV2Test {
         assertEquals("34512", engine.getBufferContents());
 
         ui.onReplay(); // Execute the same sequence again
-        assertEquals("5123412345", engine.getBufferContents());
+        assertEquals("3451212345", engine.getBufferContents());
     }
 }

@@ -1,21 +1,29 @@
 package com.minieditor.commands;
 
+import com.minieditor.core.Engine;
 import com.minieditor.recorder.CommandOriginator;
 import com.minieditor.recorder.InsertMemento;
 import com.minieditor.recorder.Memento;
-import com.minieditor.core.Engine;
+import com.minieditor.ui.UserInterface;
 
-public class Insert implements Command, CommandOriginator {
+public class Insert implements CommandOriginator {
+
     private final Engine engine;
-    private String text; // can not use final，because replay need to use setMemento
+    private final UserInterface ui;
 
-    public Insert(Engine engine, String text) {
+    // last text used during execute(), for memento
+    private String text;
+
+    public Insert(Engine engine, UserInterface ui) {
         this.engine = engine;
-        this.text = text;
+        this.ui = ui;
     }
 
     @Override
     public void execute() {
+        if (text == null) {
+            text = ui.getText();
+        }
         engine.insert(text);
     }
 
@@ -25,7 +33,8 @@ public class Insert implements Command, CommandOriginator {
     }
 
     @Override
-    public void setMemento(Memento m) {
-        this.text = ((InsertMemento) m).getText();
+    public void setMemento(Memento memento) {
+        // There is no need for instanceof here, the design ensures that memento comes from Insert itself
+        this.text = ((InsertMemento) memento).getText();
     }
 }

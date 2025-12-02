@@ -1,6 +1,10 @@
 package com.minieditor.recorder;
 
-public interface CommandOriginator {
+import com.minieditor.commands.Command;
+
+public interface CommandOriginator extends Command {
+
     Memento getMemento();
-    void setMemento(Memento m);
+
+    void setMemento(Memento memento);
 }

@@ -2,6 +2,7 @@ package com.minieditor.ui;
 
 import com.minieditor.commands.*;
 import com.minieditor.core.Engine;
+import com.minieditor.recorder.CommandOriginator;
 import com.minieditor.recorder.Recorder;
 
 public class UserInterfaceImpl implements UserInterface {
@@ -9,6 +10,11 @@ public class UserInterfaceImpl implements UserInterface {
     private final Editor editor;
     private final Engine engine;
     private final Recorder recorder;
+
+    // Status: used for command query
+    private String currentText = "";
+    private int currentBegin = 0;
+    private int currentEnd = 0;
 
     public UserInterfaceImpl(Editor editor, Engine engine, Recorder recorder) {
         this.editor = editor;
@@ -18,47 +24,48 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public void onInsert(String text) {
-        Command cmd = new Insert(engine, text);
+        this.currentText = text;
+        CommandOriginator cmd = new Insert(engine, this);
         editor.executeCommand(cmd);
         recorder.save(cmd);
     }
 
     @Override
     public void onDelete() {
-        Command cmd = new Delete(engine);
+        CommandOriginator cmd = new Delete(engine);
         editor.executeCommand(cmd);
         recorder.save(cmd);
     }
 
     @Override
     public void onCopy() {
-        Command cmd = new CopySelectedText(engine);
+        CommandOriginator cmd = new CopySelectedText(engine);
         editor.executeCommand(cmd);
         recorder.save(cmd);
     }
 
     @Override
     public void onCut() {
-        Command cmd = new CutSelectedText(engine);
+        CommandOriginator cmd = new CutSelectedText(engine);
         editor.executeCommand(cmd);
         recorder.save(cmd);
     }
 
     @Override
     public void onPaste() {
-        Command cmd = new PasteClipboard(engine);
+        CommandOriginator cmd = new PasteClipboard(engine);
         editor.executeCommand(cmd);
         recorder.save(cmd);
     }
 
     @Override
     public void onSelectionChange(int begin, int end) {
-        Command cmd = new SelectionChange(engine.getSelection(), begin, end);
+        this.currentBegin = begin;
+        this.currentEnd = end;
+        CommandOriginator cmd = new SelectionChange(engine.getSelection(), this);
         editor.executeCommand(cmd);
         recorder.save(cmd);
     }
-
-    // -------- V2 new UI actions --------
 
     @Override
     public void onStartRecording() {
@@ -72,8 +79,24 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public void onReplay() {
-        Command replay = new Replay(recorder);
-        editor.executeCommand(replay);
-        // replay itself should not be saved, otherwise it will grow infinitely
+        CommandOriginator cmd = new Replay(recorder);
+        editor.executeCommand(cmd);
+        // Do not record replay since身
+    }
+
+    // === QUERY METHOD ===
+    @Override
+    public String getText() {
+        return currentText;
+    }
+
+    @Override
+    public int getSelectionBegin() {
+        return currentBegin;
+    }
+
+    @Override
+    public int getSelectionEnd() {
+        return currentEnd;
     }
 }

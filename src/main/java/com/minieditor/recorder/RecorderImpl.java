@@ -1,7 +1,5 @@
 package com.minieditor.recorder;
 
-import com.minieditor.commands.Command;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +8,10 @@ public class RecorderImpl implements Recorder {
     private boolean recording = false;
 
     private static class Entry {
-        Command cmd;
-        Memento memento;
-        Entry(Command cmd, Memento memento) {
+        final CommandOriginator cmd;
+        final Memento memento;
+
+        Entry(CommandOriginator cmd, Memento memento) {
             this.cmd = cmd;
             this.memento = memento;
         }
@@ -22,6 +21,7 @@ public class RecorderImpl implements Recorder {
 
     @Override
     public void start() {
+        history.clear();   // Clear old history when starting recording
         recording = true;
     }
 
@@ -31,23 +31,19 @@ public class RecorderImpl implements Recorder {
     }
 
     @Override
-    public void save(Command cmd) {
-        if (!recording || cmd == null) return;
-
-        Memento m = null;
-        if (cmd instanceof CommandOriginator originator) {
-            m = originator.getMemento();
+    public void save(CommandOriginator cmd) {
+        if (!recording || cmd == null) {
+            return;
         }
-        history.add(new Entry(cmd, m));
+        Memento memento = cmd.getMemento();
+        history.add(new Entry(cmd, memento));
     }
 
     @Override
     public void replay() {
-        for (Entry e : history) {
-            if (e.memento != null && e.cmd instanceof CommandOriginator originator) {
-                originator.setMemento(e.memento);
-            }
-            e.cmd.execute();
+        for (Entry entry : history) {
+            entry.cmd.setMemento(entry.memento);
+            entry.cmd.execute();
         }
     }
 }

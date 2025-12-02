@@ -1,8 +1,12 @@
 package com.minieditor.commands;
 
 import com.minieditor.core.Engine;
+import com.minieditor.recorder.CommandOriginator;
+import com.minieditor.recorder.EmptyMemento;
+import com.minieditor.recorder.Memento;
 
-public class Delete implements Command {
+public class Delete implements CommandOriginator {
+
     private final Engine engine;
 
     public Delete(Engine engine) {
@@ -12,5 +16,15 @@ public class Delete implements Command {
     @Override
     public void execute() {
         engine.delete();
+    }
+
+    @Override
+    public Memento getMemento() {
+        return EmptyMemento.INSTANCE;
+    }
+
+    @Override
+    public void setMemento(Memento memento) {
+        // no state to restore
     }
 }
