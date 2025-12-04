@@ -1,7 +1,5 @@
 package com.minieditor.core;
 
-import com.minieditor.core.Engine;
-import com.minieditor.core.EngineImpl;
 import com.minieditor.recorder.Recorder;
 import com.minieditor.recorder.RecorderImpl;
 import com.minieditor.ui.Editor;
@@ -9,6 +7,7 @@ import com.minieditor.ui.UserInterface;
 import com.minieditor.ui.UserInterfaceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EngineImplTest {
@@ -21,8 +20,9 @@ class EngineImplTest {
     void setUp() {
         engine = new EngineImpl();
         editor = new Editor();
-        Recorder recorder = new RecorderImpl();  // V2 newly added
-        ui = new UserInterfaceImpl(editor, engine, recorder); // Use new constructor
+        Recorder recorder = new RecorderImpl();
+        UndoManager undoManager = new UndoManager(engine);
+        ui = new UserInterfaceImpl(editor, engine, recorder, undoManager);
     }
 
     @Test

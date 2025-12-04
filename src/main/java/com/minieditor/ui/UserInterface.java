@@ -12,6 +12,8 @@ public interface UserInterface {
     void onStartRecording();
     void onStopRecording();
     void onReplay();
+    void onUndo();
+    void onRedo();
 
     // Queries used by commands
     String getText();

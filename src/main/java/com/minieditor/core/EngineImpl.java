@@ -49,4 +49,23 @@ public class EngineImpl implements Engine {
     public void pasteClipboard() {
         insert(clipboard);
     }
+
+    @Override
+    public EditorMemento getMemento() {
+        String content = getBufferContents();
+        int begin = selection.getBeginIndex();
+        int end = selection.getEndIndex();
+        return new EditorMemento(content, begin, end);
+    }
+
+    @Override
+    public void setMemento(EditorMemento memento) {
+        // restore buffer
+        buffer.setLength(0);
+        buffer.append(memento.getBufferContent());
+
+        // restore selection
+        selection.setBeginIndex(memento.getBeginIndex());
+        selection.setEndIndex(memento.getEndIndex());
+    }
 }
