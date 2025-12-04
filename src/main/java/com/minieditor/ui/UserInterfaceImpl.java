@@ -5,13 +5,19 @@ import com.minieditor.core.Engine;
 import com.minieditor.recorder.CommandOriginator;
 import com.minieditor.recorder.Recorder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserInterfaceImpl implements UserInterface {
 
     private final Editor editor;
     private final Engine engine;
     private final Recorder recorder;
 
-    // Status: used for command query
+    // map of command id -> command instance
+    private final Map<String, CommandOriginator> commands = new HashMap<>();
+
+    // State: used for command queries (Insert, SelectionChange)
     private String currentText = "";
     private int currentBegin = 0;
     private int currentEnd = 0;
@@ -20,51 +26,56 @@ public class UserInterfaceImpl implements UserInterface {
         this.editor = editor;
         this.engine = engine;
         this.recorder = recorder;
+
+        // fill the map with all commands, each with an id
+        commands.put("insert", new Insert(engine, this, recorder));
+        commands.put("delete", new Delete(engine, recorder));
+        commands.put("copy", new CopySelectedText(engine, recorder));
+        commands.put("cut", new CutSelectedText(engine, recorder));
+        commands.put("paste", new PasteClipboard(engine, recorder));
+        commands.put("selectionChange", new SelectionChange(engine.getSelection(), this, recorder));
+        commands.put("replay", new Replay(recorder));
+    }
+
+    private void playCommand(String id) {
+        CommandOriginator cmd = commands.get(id);
+        if (cmd == null) {
+            throw new IllegalArgumentException("Unknown command id: " + id);
+        }
+        editor.executeCommand(cmd);
     }
 
     @Override
     public void onInsert(String text) {
         this.currentText = text;
-        CommandOriginator cmd = new Insert(engine, this);
-        editor.executeCommand(cmd);
-        recorder.save(cmd);
+        playCommand("insert");
     }
 
     @Override
     public void onDelete() {
-        CommandOriginator cmd = new Delete(engine);
-        editor.executeCommand(cmd);
-        recorder.save(cmd);
+        playCommand("delete");
     }
 
     @Override
     public void onCopy() {
-        CommandOriginator cmd = new CopySelectedText(engine);
-        editor.executeCommand(cmd);
-        recorder.save(cmd);
+        playCommand("copy");
     }
 
     @Override
     public void onCut() {
-        CommandOriginator cmd = new CutSelectedText(engine);
-        editor.executeCommand(cmd);
-        recorder.save(cmd);
+        playCommand("cut");
     }
 
     @Override
     public void onPaste() {
-        CommandOriginator cmd = new PasteClipboard(engine);
-        editor.executeCommand(cmd);
-        recorder.save(cmd);
+        playCommand("paste");
     }
 
     @Override
     public void onSelectionChange(int begin, int end) {
         this.currentBegin = begin;
         this.currentEnd = end;
-        CommandOriginator cmd = new SelectionChange(engine.getSelection(), this);
-        editor.executeCommand(cmd);
-        recorder.save(cmd);
+        playCommand("selectionChange");
     }
 
     @Override
@@ -79,12 +90,11 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public void onReplay() {
-        CommandOriginator cmd = new Replay(recorder);
-        editor.executeCommand(cmd);
-        // Do not record replay since身
+        playCommand("replay");
     }
 
-    // === QUERY METHOD ===
+    // === Query methods used by commands ===
+
     @Override
     public String getText() {
         return currentText;

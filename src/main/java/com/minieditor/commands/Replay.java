@@ -15,6 +15,7 @@ public class Replay implements CommandOriginator {
 
     @Override
     public void execute() {
+        // replay itself will not be recorded, it is only responsible for triggering recorder.replay()
         recorder.replay();
     }
 
@@ -25,5 +26,6 @@ public class Replay implements CommandOriginator {
 
     @Override
     public void setMemento(Memento memento) {
+        // no state to restore
     }
 }

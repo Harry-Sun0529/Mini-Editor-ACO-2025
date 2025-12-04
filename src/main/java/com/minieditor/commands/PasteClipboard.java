@@ -4,18 +4,22 @@ import com.minieditor.core.Engine;
 import com.minieditor.recorder.CommandOriginator;
 import com.minieditor.recorder.EmptyMemento;
 import com.minieditor.recorder.Memento;
+import com.minieditor.recorder.Recorder;
 
 public class PasteClipboard implements CommandOriginator {
 
     private final Engine engine;
+    private final Recorder recorder;
 
-    public PasteClipboard(Engine engine) {
+    public PasteClipboard(Engine engine, Recorder recorder) {
         this.engine = engine;
+        this.recorder = recorder;
     }
 
     @Override
     public void execute() {
         engine.pasteClipboard();
+        recorder.save(this);
     }
 
     @Override
@@ -25,5 +29,6 @@ public class PasteClipboard implements CommandOriginator {
 
     @Override
     public void setMemento(Memento memento) {
+        // no state to restore
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 public class RecorderImpl implements Recorder {
 
     private boolean recording = false;
+    private boolean replaying = false;
 
     private static class Entry {
         final CommandOriginator cmd;
@@ -21,7 +22,7 @@ public class RecorderImpl implements Recorder {
 
     @Override
     public void start() {
-        history.clear();   // Clear old history when starting recording
+        history.clear(); // start a new recording session
         recording = true;
     }
 
@@ -32,7 +33,8 @@ public class RecorderImpl implements Recorder {
 
     @Override
     public void save(CommandOriginator cmd) {
-        if (!recording || cmd == null) {
+        // Do not save if not recording or while replaying
+        if (!recording || replaying || cmd == null) {
             return;
         }
         Memento memento = cmd.getMemento();
@@ -40,10 +42,20 @@ public class RecorderImpl implements Recorder {
     }
 
     @Override
+    public boolean isReplaying() {
+        return replaying;
+    }
+
+    @Override
     public void replay() {
-        for (Entry entry : history) {
-            entry.cmd.setMemento(entry.memento);
-            entry.cmd.execute();
+        replaying = true;
+        try {
+            for (Entry entry : history) {
+                entry.cmd.setMemento(entry.memento);
+                entry.cmd.execute();
+            }
+        } finally {
+            replaying = false;
         }
     }
 }
