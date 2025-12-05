@@ -93,7 +93,6 @@ public class UserInterfaceImpl implements UserInterface {
     public void onSelectionChange(int begin, int end) {
         this.currentBegin = begin;
         this.currentEnd = end;
-        undoManager.store();
         playCommand("selectionChange");
     }
 
