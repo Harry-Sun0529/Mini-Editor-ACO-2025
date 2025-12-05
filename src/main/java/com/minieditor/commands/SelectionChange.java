@@ -46,7 +46,7 @@ public class SelectionChange implements CommandOriginator {
         this.end = scm.end;
     }
 
-    private static class SelectionChangeMemento implements Memento {
+    private class SelectionChangeMemento implements Memento {
         private final int begin;
         private final int end;
 

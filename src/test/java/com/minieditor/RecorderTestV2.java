@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RecorderV2Test {
+class RecorderTestV2 {
 
     private Engine engine;
     private Recorder recorder;

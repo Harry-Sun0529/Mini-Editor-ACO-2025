@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class V3UndoRedoTest {
+class UndoRedoTestV3 {
 
     private Engine engine;
     private Recorder recorder;
