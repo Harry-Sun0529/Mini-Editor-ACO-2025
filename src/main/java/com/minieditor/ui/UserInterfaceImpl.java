@@ -3,12 +3,15 @@ package com.minieditor.ui;
 import com.minieditor.commands.*;
 import com.minieditor.core.Engine;
 import com.minieditor.core.UndoManager;
-import com.minieditor.recorder.CommandOriginator;
 import com.minieditor.recorder.Recorder;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * UserInterfaceImpl acts as the Client and also as an Invoker:
+ * it maintains a map of all commands and triggers them by id.
+ */
 public class UserInterfaceImpl implements UserInterface {
 
     private final Editor editor;
@@ -17,7 +20,7 @@ public class UserInterfaceImpl implements UserInterface {
     private final UndoManager undoManager;
 
     // map of command id -> command instance
-    private final Map<String, CommandOriginator> commands = new HashMap<>();
+    private final Map<String, Command> commands = new HashMap<>();
 
     // State: used for command queries (Insert, SelectionChange)
     private String currentText = "";
@@ -38,13 +41,17 @@ public class UserInterfaceImpl implements UserInterface {
         commands.put("paste", new PasteClipboard(engine, recorder));
         commands.put("selectionChange", new SelectionChange(engine.getSelection(), this, recorder));
         commands.put("replay", new Replay(recorder));
-        // V3: undo/redo
+        // V3: undo/redo (only depend on UndoManager, no recording)
         commands.put("undo", new Undo(undoManager));
         commands.put("redo", new Redo(undoManager));
     }
 
+    /**
+     * Execute the command associated with the given id.
+     * If the id is unknown, we fail fast to make the contract explicit.
+     */
     private void playCommand(String id) {
-        CommandOriginator cmd = commands.get(id);
+        Command cmd = commands.get(id);
         if (cmd == null) {
             throw new IllegalArgumentException("Unknown command id: " + id);
         }
@@ -66,7 +73,7 @@ public class UserInterfaceImpl implements UserInterface {
 
     @Override
     public void onCopy() {
-        // copy 不改变 engine 状态，可选是否记录
+        // copy 不改变 engine 状态，可选是否进入 undo 栈
         playCommand("copy");
     }
 

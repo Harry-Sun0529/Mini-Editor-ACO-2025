@@ -1,11 +1,8 @@
 package com.minieditor.commands;
 
 import com.minieditor.core.UndoManager;
-import com.minieditor.recorder.CommandOriginator;
-import com.minieditor.recorder.EmptyMemento;
-import com.minieditor.recorder.Memento;
 
-public class Undo implements CommandOriginator {
+public class Undo implements Command {
 
     private final UndoManager undoManager;
 
@@ -16,15 +13,5 @@ public class Undo implements CommandOriginator {
     @Override
     public void execute() {
         undoManager.undo();
-    }
-
-    @Override
-    public Memento getMemento() {
-        return EmptyMemento.INSTANCE;
-    }
-
-    @Override
-    public void setMemento(Memento memento) {
-        // no state to restore
     }
 }
